@@ -1,16 +1,15 @@
-async function updateCounter(action) {
-  const response = await fetch(`/counter/${action}`, { method: "POST" });
-  const data = await response.json();
-  document.getElementById("counter").innerText = data.counter;
+let ws = new WebSocket("ws://" + location.host + "/ws");
+
+ws.onmessage = e => {
+    const data = JSON.parse(e.data);
+    document.getElementById("counter").innerText = data.counter;
+};
+
+function updateCounter(i) {
+    const current = parseInt(document.getElementById("counter").innerText);
+    const newCounter = current + i;
+    ws.send(JSON.stringify({ counter: newCounter }));
 }
 
-async function getCounter() {
-  const response = await fetch("/counter");
-  const data = await response.json();
-  document.getElementById("counter").innerText = data.counter;
-}
-
-document.getElementById("inc").onclick = () => updateCounter("inc");
-document.getElementById("dec").onclick = () => updateCounter("dec");
-
-setInterval(getCounter, 5000);
+document.getElementById("inc").onclick = () => updateCounter(1);
+document.getElementById("dec").onclick = () => updateCounter(-1);
