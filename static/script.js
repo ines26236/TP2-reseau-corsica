@@ -13,4 +13,4 @@ async function getCounter() {
 document.getElementById("inc").onclick = () => updateCounter("inc");
 document.getElementById("dec").onclick = () => updateCounter("dec");
 
-getCounter();
+setInterval(getCounter, 5000);
